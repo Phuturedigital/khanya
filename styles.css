@@ -78,7 +78,7 @@ img[width][height] { height: auto; }
    these to (0,3,1) and makes the intent explicit instead of leaving it resting
    on the fact that `position:absolute; inset:0` happens to stretch a replaced
    element on its own. */
-.hero-img[width][height],
+.hero-slide[width][height],
 .svc-card img[width][height],
 .prac-tile img[width][height],
 .about-figure img[width][height] { height: 100%; }
@@ -226,13 +226,21 @@ p { margin: 0; }
   isolation: isolate;
 }
 
-.hero-img {
+/* Five slides stacked in one box, crossfaded. All are 1800x1200, so nothing
+   shifts between them. Only the live slide is opaque; the rest stay in the
+   DOM at opacity 0 rather than being swapped in, so there is no decode flash
+   partway through the sequence. */
+.hero-media { position: absolute; inset: 0; z-index: -2; overflow: hidden; }
+
+.hero-slide {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
   object-position: 62% center;   /* keep the patient in frame as it narrows */
-  z-index: -2;
+  opacity: 0;
+  transition: opacity 1.1s ease;
 }
+.hero-slide.is-live { opacity: 1; }
 
 /* Two scrims, not one. The angled dark wash buys legibility for the headline
    on the left; the bottom fade keeps the chips and the practitioner card
@@ -241,13 +249,16 @@ p { margin: 0; }
 .hero::after {
   content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
 }
+/* Tuned against the BRIGHTEST of the five slides, not the first one. The lede
+   sits around the 55-80% band, where slide 4 is nearly white — so those stops
+   carry more weight than a single-photograph hero would need. */
 .hero::before {
   background: linear-gradient(101deg,
     rgba(5, 24, 30, .93) 0%,
-    rgba(5, 24, 30, .76) 30%,
-    rgba(5, 24, 30, .50) 54%,
-    rgba(5, 24, 30, .34) 76%,
-    rgba(5, 24, 30, .42) 100%);
+    rgba(5, 24, 30, .78) 30%,
+    rgba(5, 24, 30, .58) 54%,
+    rgba(5, 24, 30, .46) 76%,
+    rgba(5, 24, 30, .50) 100%);
 }
 .hero::after {
   background: linear-gradient(to top, rgba(5, 24, 30, .62) 0%, rgba(5, 24, 30, 0) 34%);
@@ -351,8 +362,13 @@ p { margin: 0; }
    buttons are disabled with an explanatory title. */
 .slider { display: flex; align-items: center; gap: 11px; font-size: 12px; color: rgba(255, 255, 255, .85); }
 .slider-num { font-variant-numeric: tabular-nums; letter-spacing: .04em; }
-.slider-track { flex: 1; height: 2px; background: rgba(255, 255, 255, .3); position: relative; }
-.slider-track span { position: absolute; inset: 0 auto 0 0; width: 22%; background: #fff; }
+.slider-track { flex: 1; height: 2px; background: rgba(255, 255, 255, .3); position: relative; overflow: hidden; }
+/* Fills across the life of each slide, so the bar doubles as a countdown to
+   the next one. Driven by a scaleX animation, not a width change. */
+.slider-fill {
+  position: absolute; inset: 0; background: #fff;
+  transform: scaleX(0); transform-origin: left;
+}
 /* 26px, not the 22px this used to be: WCAG 2.2 SC 2.5.8 puts the floor for a
    standalone control at 24x24. */
 .slider-btn {
@@ -361,6 +377,7 @@ p { margin: 0; }
   display: inline-grid; place-items: center;
 }
 .slider-btn svg { width: 14px; height: 14px; }
+.slider-btn:hover { color: #fff; }
 .slider-btn[disabled] { opacity: .45; cursor: not-allowed; }
 
 /* --- practitioner card (hero) --- */
@@ -772,7 +789,7 @@ details.faq p { padding-bottom: 16px; color: var(--muted); font-size: 14px; }
   .hero { min-height: 0; }
   .hero-inner { padding-top: 16px; padding-bottom: 20px; }
   .hero-body { margin-top: clamp(118px, 26vw, 190px); }
-  .hero-img { object-position: 72% center; }
+  .hero-slide { object-position: 72% center; }
 
   .svc-cards { grid-template-columns: 1fr; }
   .svc-card { aspect-ratio: 3 / 2; }
@@ -829,15 +846,29 @@ details.faq p { padding-bottom: 16px; color: var(--muted); font-size: 14px; }
 @keyframes sheen     { 0% { background-position: -220% 0; } 100% { background-position: 220% 0; } }
 @keyframes growLine  { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-/* A slow drift on the hero photograph. 26s is deliberately long — at anything
-   quicker it reads as a moving image rather than as a still that happens to
-   breathe, and on a dental site that tips from calm into restless. */
-@keyframes drift {
-  0%   { transform: scale(1.05) translate(0, 0); }
-  50%  { transform: scale(1.11) translate(-1.1%, -0.7%); }
-  100% { transform: scale(1.05) translate(0, 0); }
+/* Each slide slowly pushes in while it is on screen — a Ken Burns, restarted
+   per slide. The 8s duration deliberately outlasts the 6.5s the slide is up,
+   so the zoom never reaches its end and never visibly stalls. */
+@keyframes slideZoom {
+  from { transform: scale(1.10); }
+  to   { transform: scale(1.005); }
 }
-.hero-img { animation: drift 26s ease-in-out infinite; will-change: transform; }
+.hero-slide.is-live { animation: slideZoom 8s ease-out both; will-change: transform; }
+
+/* The progress bar is the slide's own countdown, so its duration must match
+   the autoplay interval in site.js. Both are 6.5s — change them together. */
+@keyframes trackFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.slider-fill.is-running { animation: trackFill 6.5s linear both; }
+
+/* Hovering the hero, or focusing anything inside it, holds the current slide.
+   The bar freezes with it, so the pause is visible rather than merely felt. */
+.hero.is-held .slider-fill.is-running,
+.hero.is-held .hero-slide.is-live { animation-play-state: paused; }
+
+/* Chips double as slide indicators: the one matching the live slide lights up,
+   and hovering one jumps straight to its slide. They stay real links to their
+   service section, so nothing is lost to anyone who just wants to click through. */
+.chip { transition: background-color .18s ease, color .18s ease, transform .18s ease; }
 
 /* --- hero entrance, staggered ---
    Pure CSS with `both` fill, so it runs even with JS disabled. */
@@ -965,7 +996,11 @@ details.faq p { padding-bottom: 16px; color: var(--muted); font-size: 14px; }
     opacity: 1 !important;
     transform: none !important;
   }
-  .hero-img, .prac-card, .demo-banner { animation: none !important; }
+  .hero-slide, .prac-card, .demo-banner { animation: none !important; }
+  /* No autoplay under reduced motion (site.js enforces that), so the countdown
+     bar would sit empty and lie. Show it filled instead. */
+  .slider-fill { transform: scaleX(1) !important; }
+  .hero-slide { transition: none !important; }
   .svc-card:hover img,
   .card:hover, .quote:hover, .well:hover, .prac-tile:hover,
   .btn-round:hover, .chip:hover { transform: none; }

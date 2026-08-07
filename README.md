@@ -19,7 +19,7 @@ blog.html           Sample article cards (headlines only — nothing written)
 contact.html        Booking form, location, hours, FAQ
 styles.css          The whole design system (~22KB, hand-rolled)
 site.js             Mobile nav + form handling (~3KB, no dependencies)
-assets/             Photography, logo mark, favicon (~200KB total)
+assets/             Photography (5 hero slides + 10), logo mark, favicon (~538KB)
 tools/              Image sourcing + screenshot harness — NOT deployed
 ```
 
@@ -112,12 +112,34 @@ never triggers layout.
 | Effect | How |
 |---|---|
 | Hero entrance | Pure CSS, staggered `animation-delay` — runs with JS disabled |
-| Hero photograph | 26s `drift` keyframe, a slow scale + pan |
+| **Hero carousel** | **5 crossfading slides, 6.5s autoplay, Ken Burns per slide** |
 | Scroll reveal | `IntersectionObserver`, revealed once, staggered per group |
 | Counting stats | `requestAnimationFrame`, easeOutExpo, fires when the row enters view |
 | Reading progress | A fixed bar driven by a `--p` custom property → `scaleX` |
 | Hover | Lift on cards, arrow lean on service cards, centre-out nav underline |
 | Concept banner | A slow travelling highlight — the one element that must not be skimmed |
+
+### The hero carousel
+
+Five slides, all present in the DOM from the start at `opacity:0` — switching never waits on
+an image decode, so there is no flash partway through the sequence. Slide 1 is `eager` +
+`fetchpriority="high"` because it is the LCP element; the rest are `lazy`.
+
+- **Autoplay** every 6.5s, **held** while the pointer is over the hero, while focus is inside
+  it, or while the tab is in the background.
+- The **progress bar is that timer made visible** — a `scaleX` animation whose duration must
+  stay in step with `INTERVAL` in `site.js`. Change the two together.
+- **Prev / next / arrow keys** all work; a manual move restarts the clock so the slide you
+  chose gets its full turn.
+- **Chips stay real links** to their service section. Hover or focus previews that slide, and
+  the active chip tracks whichever slide is live — so nothing is taken away from someone who
+  just wants to click through.
+- **`prefers-reduced-motion`**: no autoplay at all, no zoom, no crossfade. The controls still
+  work, and the progress bar is pinned full rather than sitting empty and implying a
+  countdown that will never arrive.
+
+`tools/check-carousel.mjs` asserts all of it — including the failure modes a screenshot can't
+show, like two slides live at once or a counter drifting out of step with the imagery.
 
 ### The flash-of-content problem
 
@@ -153,6 +175,8 @@ node tools/shoot.mjs                  # 6 pages x 7 viewports: overflow + tap-ta
 node tools/shoot.mjs --url https://…  # same, against a live deploy
 node tools/overflow.mjs about.html 390 # name the elements past the viewport edge
 node tools/check-motion.mjs           # assert nothing is stranded invisible
+node tools/check-carousel.mjs         # 18 behavioural checks on the hero carousel
+node tools/shoot-slides.mjs           # capture each hero slide in place
 node tools/render-logo.mjs            # measure + render the supplied logo files
 node tools/sample-colours.mjs <png>   # pull brand colours out of a rendered logo
 ```

@@ -95,6 +95,94 @@
     el.style.setProperty('--i', i);
   });
 
+  /* ---- hero carousel -----------------------------------------------------
+     Five crossfading slides. Every slide is already in the DOM at opacity 0,
+     so switching never waits on a decode.
+
+     INTERVAL is duplicated in styles.css as the `trackFill` animation
+     duration — the progress bar is this timer made visible, so the two must
+     be changed together. */
+  var hero = document.querySelector('.hero[data-carousel]');
+  if (hero) {
+    var INTERVAL = 6500;
+    var slides = Array.prototype.slice.call(hero.querySelectorAll('.hero-slide'));
+    var chips = Array.prototype.slice.call(hero.querySelectorAll('.chip[data-slide]'));
+    var nowEl = hero.querySelector('[data-now]');
+    var totalEl = hero.querySelector('[data-total]');
+    var fill = hero.querySelector('.slider-fill');
+    var timer = null;
+    var index = 0;
+
+    var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    if (totalEl) totalEl.textContent = pad(slides.length);
+
+    function paintFill() {
+      if (!fill || still) return;
+      /* Restart the CSS animation. Removing the class is not enough on its own
+         — the browser coalesces the remove and re-add into no change at all,
+         so a forced reflow between them is what actually resets it. */
+      fill.classList.remove('is-running');
+      void fill.offsetWidth;
+      fill.classList.add('is-running');
+    }
+
+    function show(n) {
+      index = (n + slides.length) % slides.length;
+      slides.forEach(function (s, k) { s.classList.toggle('is-live', k === index); });
+      chips.forEach(function (c, k) { c.classList.toggle('is-active', k === index); });
+      if (nowEl) nowEl.textContent = pad(index + 1);
+      paintFill();
+    }
+
+    function start() {
+      // Reduced motion means no autoplay at all — the arrows and chips still work.
+      if (still || timer) return;
+      timer = setInterval(function () { show(index + 1); }, INTERVAL);
+    }
+    function stop() { clearInterval(timer); timer = null; }
+
+    /* A manual move restarts the clock, so the slide you just chose gets its
+       full turn rather than the remainder of the previous one's. */
+    function jump(n) { show(n); if (timer) { stop(); start(); } }
+
+    var prevBtn = hero.querySelector('[data-prev]');
+    var nextBtn = hero.querySelector('[data-next]');
+    if (prevBtn) prevBtn.addEventListener('click', function () { jump(index - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { jump(index + 1); });
+
+    chips.forEach(function (c) {
+      var n = parseInt(c.getAttribute('data-slide'), 10);
+      // Hover/focus previews the slide. The chip stays a link: clicking still
+      // navigates to its service section, which is why there is no preventDefault.
+      c.addEventListener('mouseenter', function () { jump(n); });
+      c.addEventListener('focus', function () { jump(n); });
+    });
+
+    /* Hold while the visitor is reading or interacting, and whenever the tab is
+       in the background — an unwatched carousel burning a timer is pure waste. */
+    function hold() { hero.classList.add('is-held'); stop(); }
+    function release() { hero.classList.remove('is-held'); start(); }
+    hero.addEventListener('mouseenter', hold);
+    hero.addEventListener('mouseleave', release);
+    hero.addEventListener('focusin', hold);
+    hero.addEventListener('focusout', function (e) {
+      if (!hero.contains(e.relatedTarget)) release();
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stop(); else if (!hero.classList.contains('is-held')) start();
+    });
+
+    /* Arrow keys, but only once focus is inside the hero — hijacking them for
+       the whole document would break normal page scrolling. */
+    hero.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); jump(index - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); jump(index + 1); }
+    });
+
+    show(0);
+    start();
+  }
+
   /* ---- counting stats ----------------------------------------------------
      Counts up once, when the row first comes into view. */
   if (!still && 'IntersectionObserver' in window) {

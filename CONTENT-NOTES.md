@@ -33,9 +33,18 @@ at a glance which parts of the site are design work and which parts are placehol
 All images licensed from **Pexels** under the [Pexels licence](https://www.pexels.com/license/)
 — free for commercial use, attribution not required. Credits recorded anyway.
 
+The five hero slides are sequenced as a small narrative — treatment in progress, seeing the
+result, a welcomed patient, a child, the practice at work. Three come from the same Gustavo
+Fring shoot, which stops the set looking like five unrelated stock photos bolted together.
+All are 1800×1200, so nothing shifts during a crossfade.
+
 | File | Pexels ID | Photographer | Why this frame |
 |---|---|---|---|
-| `hero.webp` | 5622242 | Gustavo Fring | Landscape, patient mid-treatment — mirrors the reference hero composition. |
+| `hero.webp` | 5622242 | Gustavo Fring | Slide 1 — patient mid-treatment. Mirrors the reference hero composition. |
+| `hero-2.webp` | 5622275 | Gustavo Fring | Slide 2 — patient sees the result in a hand mirror. Same shoot as slide 1. |
+| `hero-3.webp` | 3845627 | Anna Shvets | Slide 3 — relaxed patient meeting the camera. Warmest frame of the five. |
+| `hero-4.webp` | 7800568 | Nadezhda Moryak | Slide 4 — child check-up. Chosen over darker paediatric frames that read as distress. |
+| `hero-5.webp` | 5622263 | Gustavo Fring | Slide 5 — wider room shot. Same shoot as slides 1 and 2. |
 | `about-clinic.webp` | 16903641 | Shedrack Salami | Cool-toned clinical scene; the blue cast sits inside the coastal palette. |
 | `svc-cleaning.webp` | 5622010 | Gustavo Fring | Scale-and-polish in progress. |
 | `svc-checkup.webp` | 6502742 | cottonbro studio | Dark, close mirror examination — highest contrast of the three. |
@@ -125,11 +134,17 @@ The layout follows a supplied design reference for a dental clinic site. Reprodu
 - Split about section with large image left
 - Three-column stats row
 
+The carousel the reference implies is **real**: five crossfading slides, working prev/next,
+a counter that tracks the imagery, a progress bar that doubles as a countdown, autoplay that
+holds while you read, and chips that both preview a slide on hover and remain links to their
+service section.
+
+> Earlier in this build the slider was static furniture with `disabled` controls, on the
+> grounds that faking a five-slide carousel with one photograph is a small lie. That is no
+> longer the trade-off — there are five actual photographs.
+
 Deliberately **not** reproduced:
 
-- **A working carousel.** The reference implies five slides. Faking one with a single
-  photograph would be a small lie, so the counter reads `01/05` and the controls are
-  genuinely `disabled` with an explanatory `title`.
 - **Named practitioners with credentials and ratings.** See `README.md` → Concept labelling.
 - **Undisclaimed statistics.**
 
@@ -148,6 +163,9 @@ Deliberately **not** reproduced:
    viewport. It duplicates the "Book a call" pill's destination, so it was the cheap thing to
    drop — hiding the CTA itself would have removed the primary action on the devices most
    likely to use it.
+5. **Hero scrim tuned against the brightest slide, not the first.** The lede sits in the
+   55–80% band of the gradient, where slide 4 is nearly white. Balancing that band for slide
+   1 alone left the paragraph unreadable two slides later.
 
 ---
 

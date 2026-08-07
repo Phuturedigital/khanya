@@ -32,6 +32,14 @@ const HEADERS = {
    imagery is entirely white European stock would undercut the whole premise. */
 const SLOTS = {
   hero:        'african dentist patient dental chair',
+  /* Slides 2-5 of the hero carousel. Each query aims at a different moment in
+     a visit — consultation, hygiene, a child, a result — so the sequence tells
+     a small story instead of showing the same frame five times. Landscape and
+     right-weighted composition matter: the headline sits over the left third. */
+  'hero-b':    'dentist consultation patient smiling clinic',
+  'hero-c':    'african woman dental treatment chair',
+  'hero-d':    'child dentist paediatric dental visit',
+  'hero-e':    'dental hygienist cleaning teeth patient chair',
   'svc-clean': 'teeth cleaning dental hygienist',
   'svc-check': 'dental checkup mirror examination',
   'svc-veneer':'dentist shade guide teeth whitening',

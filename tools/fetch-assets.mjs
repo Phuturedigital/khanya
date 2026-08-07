@@ -24,8 +24,22 @@ const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)';
    credit    = photographer, recorded in CONTENT-NOTES.md
    note      = why this frame was chosen */
 const ASSETS = [
+  /* --- hero carousel, five slides ---------------------------------------
+     Sequenced as a small narrative: treatment in progress, seeing the result,
+     a welcomed patient, a child, the practice at work. Three of the five come
+     from the same Gustavo Fring shoot, which keeps the set from looking like
+     five unrelated stock photos bolted together. All landscape, all composed
+     right-of-centre because the headline occupies the left third. */
   { id: 5622242,  out: 'assets/hero.webp',            w: 1800, credit: 'Gustavo Fring',
-    note: 'Landscape, patient in chair mid-treatment — mirrors the reference hero composition.' },
+    note: 'Slide 1 — patient in chair mid-treatment. Mirrors the reference hero composition.' },
+  { id: 5622275,  out: 'assets/hero-2.webp',          w: 1800, credit: 'Gustavo Fring',
+    note: 'Slide 2 — patient sees the result in a hand mirror. Same shoot as slide 1.' },
+  { id: 3845627,  out: 'assets/hero-3.webp',          w: 1800, credit: 'Anna Shvets',
+    note: 'Slide 3 — relaxed patient meeting the camera. The warmest frame of the five.' },
+  { id: 7800568,  out: 'assets/hero-4.webp',          w: 1800, credit: 'Nadezhda Moryak',
+    note: 'Slide 4 — child check-up. Chosen over darker paediatric frames that read as distress.' },
+  { id: 5622263,  out: 'assets/hero-5.webp',          w: 1800, credit: 'Gustavo Fring',
+    note: 'Slide 5 — wider room shot, the practice at work. Same shoot as slides 1 and 2.' },
   { id: 16903641, out: 'assets/about-clinic.webp',    w: 1400, credit: 'Shedrack Salami',
     note: 'Cool-toned clinical scene; the blue cast sits naturally inside the coastal palette.' },
   { id: 5622010,  out: 'assets/svc-cleaning.webp',    w: 900,  credit: 'Gustavo Fring',

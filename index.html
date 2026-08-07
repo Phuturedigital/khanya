@@ -34,8 +34,18 @@
 <div class="shell">
 
   <!-- ==================== HERO ==================== -->
-  <header class="hero">
-    <img class="hero-img" src="assets/hero.webp" alt="A dentist treating a patient in a clinic chair" width="1800" height="1200" fetchpriority="high" />
+  <header class="hero" data-carousel>
+    <!-- Five slides, crossfaded. Decorative: the headline above carries the
+         message, so a screen reader gets one label for the set rather than
+         five competing descriptions. Slide 1 loads eagerly at high priority
+         because it is the LCP element; the rest are lazy. -->
+    <div class="hero-media" role="img" aria-label="Photographs from inside the practice">
+      <img class="hero-slide is-live" src="assets/hero.webp"   alt="" width="1800" height="1200" fetchpriority="high" />
+      <img class="hero-slide"         src="assets/hero-2.webp" alt="" width="1800" height="1200" loading="lazy" />
+      <img class="hero-slide"         src="assets/hero-3.webp" alt="" width="1800" height="1200" loading="lazy" />
+      <img class="hero-slide"         src="assets/hero-4.webp" alt="" width="1800" height="1200" loading="lazy" />
+      <img class="hero-slide"         src="assets/hero-5.webp" alt="" width="1800" height="1200" loading="lazy" />
+    </div>
 
     <div class="hero-inner">
 
@@ -74,26 +84,26 @@
       </div>
 
       <div class="hero-foot">
+        <!-- Still real links to their service section — hovering or focusing one
+             also jumps the carousel to its slide, and the active chip tracks
+             whichever slide is live. Nothing is lost to a plain click. -->
         <div class="chips">
-          <a class="chip is-active" href="services.html#checkups">Check-ups</a>
-          <a class="chip" href="services.html#hygiene">Scale &amp; polish</a>
-          <a class="chip" href="services.html#fillings">Fillings</a>
-          <a class="chip" href="services.html#gum">Gum care</a>
-          <a class="chip" href="services.html#retainers">Retainers</a>
+          <a class="chip is-active" data-slide="0" href="services.html#checkups">Check-ups</a>
+          <a class="chip" data-slide="1" href="services.html#hygiene">Scale &amp; polish</a>
+          <a class="chip" data-slide="2" href="services.html#fillings">Fillings</a>
+          <a class="chip" data-slide="3" href="services.html#gum">Gum care</a>
+          <a class="chip" data-slide="4" href="services.html#retainers">Retainers</a>
         </div>
 
         <div class="hero-aside">
-          <!-- Static slider furniture. The reference shows a 5-slide carousel;
-               faking one with a single photograph would be a small lie, so the
-               controls are honestly disabled. -->
           <div class="slider">
-            <button class="slider-btn" type="button" disabled title="Carousel not implemented in this concept build" aria-label="Previous slide">
+            <button class="slider-btn" type="button" data-prev aria-label="Previous slide">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
             </button>
-            <span class="slider-num">01</span>
-            <span class="slider-track" aria-hidden="true"><span></span></span>
-            <span class="slider-num">05</span>
-            <button class="slider-btn" type="button" disabled title="Carousel not implemented in this concept build" aria-label="Next slide">
+            <span class="slider-num" data-now>01</span>
+            <span class="slider-track" aria-hidden="true"><span class="slider-fill"></span></span>
+            <span class="slider-num" data-total>05</span>
+            <button class="slider-btn" type="button" data-next aria-label="Next slide">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
             </button>
           </div>
