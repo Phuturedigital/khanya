@@ -104,6 +104,43 @@ serious one.
 
 ---
 
+## Motion
+
+Everything animated uses **transform and opacity only**, so it composites on the GPU and
+never triggers layout.
+
+| Effect | How |
+|---|---|
+| Hero entrance | Pure CSS, staggered `animation-delay` — runs with JS disabled |
+| Hero photograph | 26s `drift` keyframe, a slow scale + pan |
+| Scroll reveal | `IntersectionObserver`, revealed once, staggered per group |
+| Counting stats | `requestAnimationFrame`, easeOutExpo, fires when the row enters view |
+| Reading progress | A fixed bar driven by a `--p` custom property → `scaleX` |
+| Hover | Lift on cards, arrow lean on service cards, centre-out nav underline |
+| Concept banner | A slow travelling highlight — the one element that must not be skimmed |
+
+### The flash-of-content problem
+
+Scroll-reveal normally means "JS sets `opacity:0` after load", which guarantees a flash on a
+slow connection: the stylesheet is render-blocking, your script is not. Instead, a one-line
+inline `<script>` in `<head>` stamps a `.js` class on `<html>` **before first paint**, and
+the CSS hides reveal targets only under `.js`. No-JS visitors get the full page; JS visitors
+never see the flash.
+
+### Three states that must all stay readable
+
+`tools/check-motion.mjs` asserts that no content is ever stranded invisible:
+
+- **`prefers-reduced-motion: reduce`** — CSS forces every reveal target back to `opacity:1`.
+  Killing the transition *without* this would leave them stuck hidden, i.e. a blank page.
+- **JavaScript disabled** — `.js` is never stamped, so nothing is hidden at all.
+- **Normal, before any scroll** — anything already touching the viewport is revealed on the
+  first frame. The observer holds elements back until 12% inside the viewport, which is what
+  makes scrolling feel deliberate, but it also meant an element straddling the bottom edge on
+  load sat blank until the reader happened to scroll. A prime pass fixes that.
+
+Run it with `node tools/check-motion.mjs`.
+
 ## Tools (not deployed)
 
 `tools/` is in `.vercelignore` and never ships.
@@ -112,10 +149,18 @@ serious one.
 node tools/find-images.mjs --all      # search Pexels, download preview candidates
 node tools/fetch-assets.mjs           # fetch the CHOSEN photos as webp into assets/
 node tools/dims.mjs                   # print intrinsic dimensions for width/height attrs
-node tools/shoot.mjs                  # screenshot every page @ 1440 + 390, flag overflow
+node tools/shoot.mjs                  # 6 pages x 7 viewports: overflow + tap-target audit
 node tools/shoot.mjs --url https://…  # same, against a live deploy
 node tools/overflow.mjs about.html 390 # name the elements past the viewport edge
+node tools/check-motion.mjs           # assert nothing is stranded invisible
+node tools/render-logo.mjs            # measure + render the supplied logo files
+node tools/sample-colours.mjs <png>   # pull brand colours out of a rendered logo
 ```
+
+`shoot.mjs` sweeps **1440 / 1024 / 768 / 414 / 390 / 360 / 320** and fails on horizontal
+overflow, console errors, failed requests, or any standalone tap target under 24×24
+(WCAG 2.2 SC 2.5.8 — links sitting inline inside a sentence are exempt, and it detects that).
+It scrolls each page before capturing so scroll-reveal content is actually in the screenshot.
 
 `shoot.mjs` and `overflow.mjs` borrow Playwright from the sibling `thatha` checkout rather
 than adding `node_modules` here — the site itself stays zero-dependency, which is the point

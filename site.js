@@ -37,6 +37,117 @@
     });
   }
 
+  /* ---- motion -----------------------------------------------------------
+     All of this is enhancement. If the visitor has asked for reduced motion we
+     unhide everything and return, rather than running a cheaper animation —
+     "less motion" means none, not less. */
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var REVEAL = '.sec-head, .card, .well, .svc-card, .about-figure, .about-copy,'
+    + '.prac-pair, .stat, .stats-note, .quote, .post, .note-box, .price-row,'
+    + '.cta-band, .foot-top, .reviews';
+
+  if (still || !('IntersectionObserver' in window)) {
+    // No observer (or no appetite for motion): show everything immediately.
+    document.querySelectorAll(REVEAL).forEach(function (el) { el.classList.add('is-in'); });
+  } else {
+    /* Stagger is applied per GROUP rather than per element. Indexing every
+       match on the page would give the footer a two-second delay; resetting
+       the counter for each parent keeps every group's cascade short. */
+    var groups = new Map();
+    document.querySelectorAll(REVEAL).forEach(function (el) {
+      var parent = el.parentElement;
+      var n = groups.get(parent) || 0;
+      groups.set(parent, n + 1);
+      el.style.setProperty('--rd', Math.min(n, 5) * 80 + 'ms');
+    });
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);          // reveal once; never re-hide on scroll up
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+
+    document.querySelectorAll(REVEAL).forEach(function (el) { io.observe(el); });
+
+    /* Prime whatever is already on screen.
+       The observer deliberately holds elements back until they are 12% inside
+       the viewport, which is what makes the reveal feel deliberate while
+       scrolling. But it also means an element straddling the bottom edge at
+       load is visible to the reader and still sitting at opacity:0 — blank
+       until they happen to scroll. Anything touching the real viewport on the
+       first frame is therefore revealed immediately. */
+    requestAnimationFrame(function () {
+      document.querySelectorAll(REVEAL).forEach(function (el) {
+        if (el.classList.contains('is-in')) return;
+        if (el.getBoundingClientRect().top < window.innerHeight) {
+          el.classList.add('is-in');
+          io.unobserve(el);
+        }
+      });
+    });
+  }
+
+  /* Chips arrive in sequence — the index drives the CSS animation-delay. */
+  document.querySelectorAll('.chips .chip').forEach(function (el, i) {
+    el.style.setProperty('--i', i);
+  });
+
+  /* ---- counting stats ----------------------------------------------------
+     Counts up once, when the row first comes into view. */
+  if (!still && 'IntersectionObserver' in window) {
+    var nums = document.querySelectorAll('.stat-n[data-count]');
+    if (nums.length) {
+      var numIo = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          numIo.unobserve(e.target);
+          var el = e.target;
+          var target = parseFloat(el.getAttribute('data-count'));
+          var decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+          var suffix = el.getAttribute('data-suffix') || '';
+          var started = null;
+          var DURATION = 1400;
+
+          function frame(now) {
+            if (started === null) started = now;
+            var t = Math.min(1, (now - started) / DURATION);
+            // easeOutExpo — fast off the mark, long settle. Reads as precise
+            // rather than as a slot machine.
+            var eased = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+            el.textContent = (target * eased).toFixed(decimals) + suffix;
+            if (t < 1) requestAnimationFrame(frame);
+          }
+          requestAnimationFrame(frame);
+        });
+      }, { threshold: 0.5 });
+      nums.forEach(function (el) { numIo.observe(el); });
+    }
+  }
+
+  /* ---- reading progress -------------------------------------------------- */
+  if (!still) {
+    var bar = document.createElement('div');
+    bar.className = 'progress';
+    document.body.appendChild(bar);
+
+    var ticking = false;
+    function updateBar() {
+      var doc = document.documentElement;
+      var max = doc.scrollHeight - doc.clientHeight;
+      // Only ever writes a custom property the CSS turns into a transform, so
+      // the browser composites rather than re-laying-out on every scroll tick.
+      bar.style.setProperty('--p', max > 0 ? (doc.scrollTop / max).toFixed(4) : '0');
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(updateBar); }
+    }, { passive: true });
+    updateBar();
+  }
+
   /* ---- booking form ----------------------------------------------------- */
   var form = document.querySelector('form[data-demo-form]');
   var out = document.getElementById('form-result');

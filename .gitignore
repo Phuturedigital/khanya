@@ -21,3 +21,6 @@ Thumbs.db
 .idea/
 *.swp
 *.html.bak
+
+.vercel
+.env*

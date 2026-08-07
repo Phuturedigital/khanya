@@ -71,6 +71,23 @@ for (const vp of VIEWPORTS) {
     await page.goto(target, { waitUntil: 'networkidle', timeout: 45000 });
     await page.waitForTimeout(350);
 
+    /* Scroll the whole page before capturing. The scroll-reveal targets are
+       opacity:0 until IntersectionObserver sees them, and it only fires for
+       what has actually entered the viewport — so a fullPage screenshot taken
+       from a standing start renders everything below the fold as blank. Walk
+       down, let the observers fire, then return to the top so the hero is in
+       its natural state for the capture. */
+    await page.evaluate(async () => {
+      const step = Math.round(window.innerHeight * 0.8);
+      for (let y = 0; y < document.body.scrollHeight; y += step) {
+        window.scrollTo(0, y);
+        await new Promise((r) => setTimeout(r, 90));
+      }
+      window.scrollTo(0, 0);
+      await new Promise((r) => setTimeout(r, 200));
+    });
+    await page.waitForTimeout(900);   // let the reveal transitions settle
+
     /* Horizontal overflow is the single most common responsive defect and is
        invisible in a full-page screenshot. Measure it explicitly. */
     const overflow = await page.evaluate(() =>

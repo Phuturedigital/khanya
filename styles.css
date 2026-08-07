@@ -815,18 +815,167 @@ details.faq p { padding-bottom: 16px; color: var(--muted); font-size: 14px; }
   .display-xl { font-size: clamp(32px, 9vw, 40px); }
 }
 
+/* ============================================================================
+   MOTION
+   Everything here is transform/opacity only, so it composites on the GPU and
+   never triggers layout. All of it is switched off wholesale by the
+   prefers-reduced-motion block at the bottom of this file.
+   ========================================================================= */
+
+@keyframes rise      { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+@keyframes riseSm    { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn    { from { opacity: 0; } to { opacity: 1; } }
+@keyframes floaty    { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes sheen     { 0% { background-position: -220% 0; } 100% { background-position: 220% 0; } }
+@keyframes growLine  { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* A slow drift on the hero photograph. 26s is deliberately long — at anything
+   quicker it reads as a moving image rather than as a still that happens to
+   breathe, and on a dental site that tips from calm into restless. */
+@keyframes drift {
+  0%   { transform: scale(1.05) translate(0, 0); }
+  50%  { transform: scale(1.11) translate(-1.1%, -0.7%); }
+  100% { transform: scale(1.05) translate(0, 0); }
+}
+.hero-img { animation: drift 26s ease-in-out infinite; will-change: transform; }
+
+/* --- hero entrance, staggered ---
+   Pure CSS with `both` fill, so it runs even with JS disabled. */
+.hero-nav      { animation: riseSm .7s cubic-bezier(.2,.7,.25,1) .05s both; }
+.hero-body h1  { animation: rise   .9s cubic-bezier(.2,.7,.25,1) .18s both; }
+.hero-lede     { animation: rise   .9s cubic-bezier(.2,.7,.25,1) .32s both; }
+.chips         { animation: rise   .8s cubic-bezier(.2,.7,.25,1) .44s both; }
+.hero-aside    { animation: rise   .8s cubic-bezier(.2,.7,.25,1) .54s both; }
+.page-head .crumb { animation: riseSm .6s ease .1s both; }
+.page-head h1     { animation: rise   .8s cubic-bezier(.2,.7,.25,1) .18s both; }
+.page-head > p    { animation: rise   .8s cubic-bezier(.2,.7,.25,1) .3s both; }
+
+/* Each chip arrives just after the one before it. */
+.chip { animation: riseSm .55s cubic-bezier(.2,.7,.25,1) both; animation-delay: calc(.5s + var(--i, 0) * 60ms); }
+
+/* The practitioner card breathes, which stops the hero feeling like a poster. */
+.prac-card { animation: rise .8s cubic-bezier(.2,.7,.25,1) .54s both, floaty 7s ease-in-out 1.4s infinite; }
+
+/* --- scroll reveal ---
+   The `.js` class is stamped on <html> by an inline script in <head>, before
+   first paint. Hiding these only under `.js` means a visitor without
+   JavaScript sees the full page rather than a blank one, and a visitor with it
+   never sees a flash of un-hidden content. */
+.js .sec-head,
+.js .card,
+.js .well,
+.js .svc-card,
+.js .about-figure,
+.js .about-copy,
+.js .prac-pair,
+.js .stat,
+.js .stats-note,
+.js .quote,
+.js .post,
+.js .note-box,
+.js .price-row,
+.js .cta-band,
+.js .foot-top,
+.js .reviews {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity .8s cubic-bezier(.2,.7,.25,1), transform .8s cubic-bezier(.2,.7,.25,1);
+  transition-delay: var(--rd, 0ms);
+}
+/* Placed after the block above so it wins on source order at equal specificity. */
+.js .is-in { opacity: 1; transform: none; }
+
+/* --- hover life --- */
+.card, .quote, .well, .post-thumb, .prac-tile {
+  transition: transform .38s cubic-bezier(.2,.7,.25,1), box-shadow .38s ease;
+}
+.card:hover, .quote:hover, .well:hover { transform: translateY(-5px); box-shadow: var(--shadow-card); }
+.post:hover .post-thumb { transform: translateY(-5px); box-shadow: var(--shadow-card); }
+.prac-tile:hover { transform: translateY(-4px); }
+
+.chip:hover { transform: translateY(-2px); }
+.btn-pill:hover, .btn-gold:hover, .btn-ink:hover, .btn-ghost:hover { transform: translateY(-2px); }
+.btn-round:hover { transform: translateY(-2px) rotate(8deg); }
+
+/* The corner arrow leans out of the card on hover. */
+.svc-go { transition: transform .32s cubic-bezier(.2,.7,.25,1), background-color .3s ease; }
+.svc-card:hover .svc-go { transform: translate(3px, -3px); background: var(--gold); }
+.svc-card-label .t { transition: transform .32s cubic-bezier(.2,.7,.25,1); }
+.svc-card:hover .svc-card-label .t { transform: translateY(-3px); }
+
+/* Nav links grow an underline from the centre. */
+.nav-links a { position: relative; }
+.nav-links a::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -5px; height: 1.5px;
+  background: var(--gold); transform: scaleX(0); transform-origin: center;
+  transition: transform .3s cubic-bezier(.2,.7,.25,1);
+}
+.nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+
+/* A slow highlight travelling across the concept banner. It is the one piece
+   of the page that must never be skimmed past, so it earns the motion. */
+.demo-banner {
+  background-image: linear-gradient(100deg,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(255, 255, 255, .42) 50%,
+    rgba(255, 255, 255, 0) 62%);
+  background-size: 220% 100%;
+  background-repeat: no-repeat;
+  animation: sheen 7s ease-in-out 1.6s infinite;
+}
+
+/* Section headings draw a short gold rule as they arrive. */
+.sec-head-title { position: relative; }
+.js .sec-head.is-in .sec-head-title::before {
+  content: ''; position: absolute; left: 0; top: -14px; width: 46px; height: 2px;
+  background: var(--gold); transform-origin: left;
+  animation: growLine .7s cubic-bezier(.2,.7,.25,1) .15s both;
+}
+
+/* Reading-progress bar. Width is driven from JS via a custom property, so the
+   browser only ever re-composites a transform. */
+.progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 200;
+  background: var(--gold); transform-origin: left;
+  transform: scaleX(var(--p, 0));
+  transition: transform .12s linear;
+  pointer-events: none;
+}
+
+/* Counting numbers must not reflow the row as digits change width. */
+.stat-n { font-variant-numeric: tabular-nums; }
+
 /* ---------- motion / print ------------------------------------------------ */
+/* Someone who has asked their OS for less motion gets none of it. Critically,
+   the reveal targets are forced back to visible — killing the transition
+   without this would leave them stuck at opacity:0 and hide the page. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
+    animation-delay: 0ms !important;
+    transition-delay: 0ms !important;
   }
-  .svc-card:hover img { transform: none; }
+  .js .sec-head, .js .card, .js .well, .js .svc-card, .js .about-figure,
+  .js .about-copy, .js .prac-pair, .js .stat, .js .stats-note, .js .quote,
+  .js .post, .js .note-box, .js .price-row, .js .cta-band, .js .foot-top,
+  .js .reviews {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero-img, .prac-card, .demo-banner { animation: none !important; }
+  .svc-card:hover img,
+  .card:hover, .quote:hover, .well:hover, .prac-tile:hover,
+  .btn-round:hover, .chip:hover { transform: none; }
+  .progress { display: none; }
 }
 
 @media print {
-  .hero-nav, .demo-banner, .nav-toggle, .cta-band, .carousel-controls, .slider { display: none !important; }
+  .hero-nav, .demo-banner, .nav-toggle, .cta-band, .carousel-controls, .slider, .progress { display: none !important; }
+  /* Reveal targets must print, whether or not they were scrolled into view. */
+  .js * { opacity: 1 !important; transform: none !important; animation: none !important; }
   body { background: #fff; }
   .sheet, .foot, .hero { box-shadow: none; border-radius: 0; }
 }
