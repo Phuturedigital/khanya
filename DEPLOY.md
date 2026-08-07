@@ -58,6 +58,13 @@ issued for the exact hostname.
 
 ## Sharing
 
-⚠️ **Never share a raw `khanya-<hash>.vercel.app` deployment URL.** Deployment Protection is
-on for per-deployment URLs, so recipients hit a "Login – Vercel" wall. Share only the custom
-domain.
+⚠️ **Never share a raw `khanya-<hash>-tlotlisos-projects-….vercel.app` deployment URL.**
+Deployment Protection is on for per-deployment URLs, so recipients hit a "Login – Vercel"
+wall.
+
+Two URLs are public and safe to share:
+
+| URL | Status |
+|---|---|
+| `https://khanya-concept.phuturedigital.co.za` | **preferred** — pending the CNAME above |
+| `https://khanya-seven.vercel.app` | live now, works today |
