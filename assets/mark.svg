@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Khanya Dental Studio">
+  <!-- Rebuilt as clean vector from the supplied "Khanya Logo Design" files.
+       The supplied SVGs wrap embedded rasters and their artwork overflows the
+       declared viewBox, so the tooth is clipped flat at its base and the
+       wordmark survives only as "K" plus half of "DE". See CONTENT-NOTES.md.
+
+       This redraw keeps the supplied design — brush-stroke tooth inside an
+       open gold arc with a sparkle above — as real paths, so it scales, stays
+       sharp, and recolours from CSS. The tooth takes currentColor so one file
+       serves both the dark nav (white) and the light footer (navy). -->
+  <path d="M10.7 46.9A26 26 0 1 1 53.3 46.9"
+        fill="none" stroke="#DFB865" stroke-width="1.7" stroke-linecap="round"/>
+  <path d="M32 8.2c0 4.2 1.6 5.8 5.8 5.8-4.2 0-5.8 1.6-5.8 5.8 0-4.2-1.6-5.8-5.8-5.8 4.2 0 5.8-1.6 5.8-5.8Z"
+        fill="#DFB865"/>
+  <path d="M18 45c-4-12-4-22 4-24 5-1.2 8 1.8 10 5 2-3.2 5-6.2 10-5 8 2 8 12 4 24"
+        fill="none" stroke="currentColor" stroke-width="5.6"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

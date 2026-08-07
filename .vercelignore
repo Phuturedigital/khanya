@@ -1,0 +1,16 @@
+# Internal docs — stay in git, kept off the public demo URL.
+README.md
+DEPLOY.md
+CONTENT-NOTES.md
+
+# Image sourcing/conversion scripts — never part of the deployed site.
+tools/
+node_modules/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.html.bak
+.vscode/
+.idea/

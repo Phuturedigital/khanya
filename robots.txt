@@ -1,0 +1,7 @@
+# Khanya Dental Studio is an INVENTED BRAND and this is a concept demo build.
+# It must never be indexed. A fictional dental practice appearing in local search
+# results could send a real patient looking for real care to a site that has no
+# practice, no practitioners and no HPCSA registration behind it.
+# Reinforces the X-Robots-Tag: noindex, nofollow header set in vercel.json.
+User-agent: *
+Disallow: /

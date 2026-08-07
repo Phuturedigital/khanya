@@ -1,0 +1,23 @@
+# Dependencies (none required — this is a zero-build static site)
+node_modules/
+package-lock.json
+
+# Vercel
+.vercel
+
+# Tool OUTPUT is regenerated on demand; the scripts themselves are committed.
+# previews/ is the stock-image candidate pool (60 JPEGs), shots/ is the
+# Playwright screenshot set — neither belongs in git, and neither ships.
+tools/previews/
+tools/shots/
+tools/originals/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.html.bak

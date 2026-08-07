@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Contact — Khanya Dental Studio · Concept demo</title>
+<meta name="description" content="Contact layout for the Khanya Dental Studio concept demo. The form does not book appointments; there is no practice." />
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="demo-banner">
+  <strong>Concept demo.</strong> Khanya Dental Studio is an invented brand created by
+  <a href="https://www.phuturedigital.co.za" rel="noopener">Phuture Digital</a> to demonstrate a website design.
+  It is not a real dental practice &mdash; no practitioners, no bookings, no HPCSA registration.
+</div>
+
+<div class="shell">
+  <header class="page-head">
+    <nav class="hero-nav" aria-label="Primary">
+      <a class="brand" href="index.html" aria-label="Khanya Dental Studio — home">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10.7 46.9A26 26 0 1 1 53.3 46.9" fill="none" stroke="#DFB865" stroke-width="1.7" stroke-linecap="round"/><path d="M32 8.2c0 4.2 1.6 5.8 5.8 5.8-4.2 0-5.8 1.6-5.8 5.8 0-4.2-1.6-5.8-5.8-5.8 4.2 0 5.8-1.6 5.8-5.8Z" fill="#DFB865"/><path d="M18 45c-4-12-4-22 4-24 5-1.2 8 1.8 10 5 2-3.2 5-6.2 10-5 8 2 8 12 4 24" fill="none" stroke="currentColor" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Khanya<span class="brand-sub">Concept</span>
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="about.html">About us</a>
+        <a href="testimonials.html">Testimonials</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html" class="active">Contact</a>
+      </div>
+      <div class="nav-actions">
+        <a class="btn btn-pill" href="#book">Book a call</a>
+        <a class="btn-round" href="#book" aria-label="Jump to the booking form">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </a>
+        <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </nav>
+
+    <p class="crumb"><a href="index.html">Home</a> &rsaquo; Contact</p>
+    <h1 class="display-l">Get in touch</h1>
+    <p>
+      This page shows how a practice would take bookings. Submitting the form does not book
+      anything &mdash; it opens a pre-filled email to Phuture Digital, who built the concept.
+    </p>
+  </header>
+
+  <main id="main">
+    <div class="sheet">
+
+      <section class="section" id="book" aria-labelledby="book-h">
+        <div class="sec-head">
+          <div class="sec-head-title">
+            <span class="eyebrow">Booking</span>
+            <h2 class="display-l" id="book-h">Request an appointment</h2>
+          </div>
+          <p class="sec-head-copy">
+            A real practice would wire this to its diary software and confirm by SMS. Here it
+            is deliberately inert, and says so the moment you press the button.
+          </p>
+        </div>
+
+        <div class="grid-2 mt-m">
+          <form data-demo-form novalidate>
+            <div class="field">
+              <label for="name">Your name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="phone">Mobile number</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="082 000 0000" />
+            </div>
+            <div class="field">
+              <label for="service">What do you need?</label>
+              <select id="service" name="service">
+                <option>Check-up</option>
+                <option>Scale &amp; polish</option>
+                <option>Filling</option>
+                <option>Gum care</option>
+                <option>Retainer or mouthguard</option>
+                <option>Whitening</option>
+                <option>Veneers</option>
+                <option>Emergency &mdash; in pain</option>
+                <option>General enquiry</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="message">Anything we should know?</label>
+              <textarea id="message" name="message" placeholder="Nervous patient, medical aid scheme, preferred times…"></textarea>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn btn-gold" type="submit">Request appointment</button>
+            </div>
+            <div id="form-result" hidden></div>
+
+            <p class="small muted mt-s">
+              Do not enter real medical information. This is a demo build with no server,
+              no database and no privacy safeguards behind it.
+            </p>
+          </form>
+
+          <div>
+            <div class="note-box">
+              <b>This form cannot book an appointment.</b>
+              There is no practice, no diary and no backend. If you are in dental pain, call a
+              real practice or your nearest emergency department &mdash; not this page.
+            </div>
+
+            <div class="well mt-m" id="find">
+              <h3 class="display-m">Where it would be</h3>
+              <p class="muted mt-s">
+                The concept places Khanya on Main Road in Sea Point, Cape Town &mdash; walkable
+                from the promenade, on the MyCiTi route, with parking behind the building.
+              </p>
+              <p class="mt-s"><span class="placeholder-tag">Invented location &mdash; no premises exist</span></p>
+            </div>
+
+            <div class="well mt-m">
+              <h3 class="display-m">Hours</h3>
+              <div class="price-row"><span>Monday &ndash; Thursday</span><span class="p">08:00 &ndash; 17:00</span></div>
+              <div class="price-row"><span>Friday</span><span class="p">08:00 &ndash; 15:00</span></div>
+              <div class="price-row"><span>Saturday</span><span class="p">08:00 &ndash; 12:00</span></div>
+              <div class="price-row"><span>Sunday &amp; public holidays</span><span class="p">Closed</span></div>
+              <p class="mt-s"><span class="placeholder-tag">Illustrative hours</span></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="faq" aria-labelledby="faq-h">
+        <div class="sec-head sec-head--wide">
+          <div class="sec-head-title">
+            <span class="eyebrow">Questions</span>
+            <h2 class="display-l" id="faq-h">Before you ask</h2>
+          </div>
+        </div>
+
+        <div class="mt-m">
+          <details class="faq">
+            <summary>Is Khanya Dental Studio a real practice?</summary>
+            <p>
+              No. It is an invented brand created by Phuture Digital to demonstrate a website
+              design. There is no practice, no practitioners, no HPCSA registration and no
+              premises. Nothing on this site should inform a decision about dental care.
+            </p>
+          </details>
+          <details class="faq">
+            <summary>Are the people in the photographs Khanya staff?</summary>
+            <p>
+              No. Every photograph is licensed stock and everyone shown is a model. No real
+              person on this site has been given a clinical credential, a name or a quote.
+            </p>
+          </details>
+          <details class="faq">
+            <summary>Are the prices real?</summary>
+            <p>
+              No. They are invented placeholder figures chosen to look plausible so the layout
+              can be judged. They are not benchmarked against any tariff guide and no practice
+              stands behind them.
+            </p>
+          </details>
+          <details class="faq">
+            <summary>What happens if I submit the form?</summary>
+            <p>
+              Nothing is sent anywhere. The page tells you plainly that no appointment was
+              booked and offers to open a pre-filled email to Phuture Digital instead. There
+              is no server, so your details are never transmitted or stored.
+            </p>
+          </details>
+          <details class="faq">
+            <summary>Can I have a site like this for my practice?</summary>
+            <p>
+              Yes &mdash; that is what the concept is for. Email
+              <a href="mailto:hello@phuturedigital.co.za" style="text-decoration:underline">hello@phuturedigital.co.za</a>
+              and it would be built with your real brand, your real team and your real fees.
+            </p>
+          </details>
+        </div>
+      </section>
+
+    </div>
+
+    <section class="cta-band">
+      <div>
+        <h2 class="display-m">Built by Phuture Digital</h2>
+        <p>South African web design and build. This concept took a design reference and turned it into a working, responsive site.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-gold" href="mailto:hello@phuturedigital.co.za">hello@phuturedigital.co.za</a>
+        <a class="btn btn-pill" href="https://www.phuturedigital.co.za" rel="noopener">phuturedigital.co.za</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-top">
+      <div>
+        <a class="brand" href="index.html">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10.7 46.9A26 26 0 1 1 53.3 46.9" fill="none" stroke="#DFB865" stroke-width="1.7" stroke-linecap="round"/><path d="M32 8.2c0 4.2 1.6 5.8 5.8 5.8-4.2 0-5.8 1.6-5.8 5.8 0-4.2-1.6-5.8-5.8-5.8 4.2 0 5.8-1.6 5.8-5.8Z" fill="#DFB865"/><path d="M18 45c-4-12-4-22 4-24 5-1.2 8 1.8 10 5 2-3.2 5-6.2 10-5 8 2 8 12 4 24" fill="none" stroke="currentColor" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Khanya
+        </a>
+        <p class="small muted" style="margin-top:12px;max-width:34ch">
+          Modern dentistry, gentle hands. An invented South African dental brand,
+          created as a website concept.
+        </p>
+      </div>
+      <div>
+        <h4>Practice</h4>
+        <ul>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="testimonials.html">Testimonials</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <ul>
+          <li><a href="contact.html">Book an appointment</a></li>
+          <li><a href="contact.html#find">Find us</a></li>
+          <li><a href="contact.html#faq">Questions</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Built by</h4>
+        <ul>
+          <li><a href="https://www.phuturedigital.co.za" rel="noopener">Phuture Digital</a></li>
+          <li><a href="mailto:hello@phuturedigital.co.za">hello@phuturedigital.co.za</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="concept-note">
+      <strong>This is a concept demo, not a live client site.</strong>
+      Khanya Dental Studio does not exist. There is no practice, no practitioners, no HPCSA
+      registration, and no appointment diary. All photography is licensed stock and the people
+      shown are models, not staff. Every figure, price and review on this site is invented for
+      demonstration. Built by Phuture Digital.
+    </div>
+
+    <div class="foot-bottom">
+      <span>Concept demo &middot; Phuture Digital &middot; Cape Town</span>
+      <span><a href="https://www.phuturedigital.co.za" rel="noopener">phuturedigital.co.za</a></span>
+    </div>
+  </footer>
+</div>
+
+<script src="site.js"></script>
+</body>
+</html>
